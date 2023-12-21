@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  redis:
+    build:
+      context: ./
+      dockerfile: ./redis.Dockerfile
+    volumes:
+      - saige_workspace:/workspace
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    privileged: true
+    command: sh -c "./init.sh"
+    restart: always
+    networks:
+      - saige_network
+  python-service:
+    build:
+      context: ./
+      dockerfile: ./python.Dockerfile
+    volumes:
+      - saige_workspace:/workspace
+    restart: always
+    privileged: true
+    ports:
+      - 40000:40000
+    container_name: python-service
+    networks:
+      - saige_network
+
+networks:
+  saige_network:
+
+volumes:
+  saige_workspace:
+    external: true
