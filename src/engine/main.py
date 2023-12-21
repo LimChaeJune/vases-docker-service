@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
 	app = FastAPI()
 
-	fsam_model = FastSAM('./FastSAM-x.pt')
+	fsam_model = FastSAM('./FastSAM-s.pt')
 
 	@app.post("/dimension/save")
 	def save_umap(options: LoadSaveOptions):
