@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 
 services:
   redis:
@@ -12,10 +12,9 @@ services:
     ports:
       - 6379:6379
     privileged: true
-    command: sh -c "./init.sh"
     restart: always
     networks:
-      - saige_network
+      saige_network:
   python-service:
     build:
       context: ./
@@ -26,9 +25,12 @@ services:
     privileged: true
     ports:
       - 40000:40000
+    environment:
+      - PORT=40000
+    image: python-service
     container_name: python-service
     networks:
-      - saige_network
+      saige_network:
 
 networks:
   saige_network:

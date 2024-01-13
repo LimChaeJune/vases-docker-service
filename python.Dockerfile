@@ -10,15 +10,17 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx
 
-WORKDIR /root
-ENV HOME /root
+WORKDIR /home
+ENV HOME /home
 SHELL ["/bin/bash", "-c"]
+
+RUN mkdir -p /workspace/venv
 
 ENV PATH="/workspace/venv/bin:$PATH"
 RUN echo "source /workspace/venv/bin/activate" >> .bashrc
 
-COPY src/engine /root
-COPY /scripts/venv-init.sh /root/venv-init.sh
+COPY src/engine /home
+COPY /scripts/venv-init.sh /home/venv-init.sh
 
-ENTRYPOINT ["/bin/bash", "-c", "/root/venv-init.sh \"$@\"", "--"]
+ENTRYPOINT ["/home/venv-init.sh", "$PORT"]
 CMD ["/bin/bash"]
