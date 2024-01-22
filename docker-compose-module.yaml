@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  init-repo:
+    build:
+      context: ./
+      dockerfile: ./repo.Dockerfile
+    volumes:
+      - module_space:/workspace
+    environment:
+      - PORT=8888
+      - TOKEN=oa7gaivrqi6gr7cqs7ydengif54flxtiy2iq5jmotldspcnd2a2a
+      - iad=2.1.12
+      - seg=2.0.23
+      - cls=2.0.23
+      - det=2.0.31
+      - ocr=2.0.30
+      - gen=2.0.21
+      - ien=2.0.6
+    image: init-repo
+    container_name: init-repo
+    ports:
+      - 8888:8888
+    networks:
+      saige_network:
+  init-module:
+    build:
+      context: ./
+      dockerfile: ./module.Dockerfile
+    volumes:
+      - module_space:/workspace
+    image: init-module
+    container_name: init-module
+    networks:
+      saige_network:
+
+networks:
+  saige_network:
+
+volumes:
+  module_space:
+    external: true

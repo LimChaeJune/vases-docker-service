@@ -3,7 +3,7 @@
 ENVNAME=/workspace/venv
 
 python -m venv $ENVNAME
-source $ENVNAME/bin/activate
+. /workspace/venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 

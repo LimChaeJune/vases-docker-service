@@ -11,7 +11,6 @@ services:
     container_name: redis
     ports:
       - 6379:6379
-    privileged: true
     restart: always
     networks:
       saige_network:
@@ -20,9 +19,8 @@ services:
       context: ./
       dockerfile: ./python.Dockerfile
     volumes:
-      - saige_workspace:/workspace
+      - ./static:/workspace
     restart: always
-    privileged: true
     ports:
       - 40000:40000
     environment:

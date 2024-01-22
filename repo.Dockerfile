@@ -1,5 +1,6 @@
 FROM python:3.8
-# FROM nvidia/cuda:12.3.1-base-ubuntu20.04
+ 
+USER root
 
 # Sets utf-8 encoding for Python et al
 ENV LANG=C.UTF-8
@@ -11,17 +12,20 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx
 
+RUN apt-get update
+RUN apt-get upgrade -y
+ 
+# container에 git 설치
+RUN apt-get install git -y
+
 WORKDIR /home
 ENV HOME /home
 SHELL ["/bin/bash", "-c"]
 
-RUN mkdir -p /workspace/venv
-
 ENV PATH="/workspace/venv/bin:$PATH"
 RUN echo "source /workspace/venv/bin/activate" >> .bashrc
 
-COPY src/engine /home
-COPY scripts/venv-init.sh /home/venv-init.sh
+COPY scripts/module-init.sh /home/module-init.sh
 
-ENTRYPOINT ["sh", "/home/venv-init.sh", "$PORT"]
+ENTRYPOINT ["sh", "/home/module-init.sh"]
 CMD ["/bin/bash"]
