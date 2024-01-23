@@ -36,6 +36,14 @@ services:
       - 40000:40000
     environment:
       - PORT=40000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              # device_ids:['0']
+              count: 1
+              capabilities: [gpu]
     image: engine
     container_name: engine
     networks:
