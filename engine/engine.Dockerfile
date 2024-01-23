@@ -20,7 +20,7 @@ RUN mkdir -p /workspace/venv
 ENV PATH="/workspace/venv/bin:$PATH"
 RUN echo "source /workspace/venv/bin/activate" >> .bashrc
 
-COPY src/engine /home
+COPY /engine /home
 COPY scripts/venv-init.sh /home/venv-init.sh
 
 ENTRYPOINT ["sh", "/home/venv-init.sh", "$PORT"]

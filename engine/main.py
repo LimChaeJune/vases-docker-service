@@ -60,7 +60,7 @@ if __name__ == "__main__":
 	socket_manager = SocketManager()
 	socket_manager.on("connect", handler=handle_connect)
 
-	app = FastAPI()
+	app = FastAPI(root_path="/engine/v1")
 
 	fsam_model = FastSAM('./FastSAM-s.pt')
 
@@ -177,6 +177,6 @@ if __name__ == "__main__":
 		return FastSamResponse(annotations=results, width=origin_w, height=origin_h)
 
 	
-	socket_manager.mount_to("/", app)
+	socket_manager.mount_to("/engine/v1", app)
 	uvicorn.run(app, host="0.0.0.0", port=40000)
 		

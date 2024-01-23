@@ -1,0 +1,25 @@
+{
+  "root_path": "./",
+  "host": "0.0.0.0",
+  "port": 8090,
+  "session_time": 240,
+  "database": {
+    "client": "better-sqlite3",
+    "connection": {
+      "filename": "./docker.db"
+    }
+  },
+  "google_auth": {
+    "id": "",
+    "secret": "",
+    "domain": ""
+  },
+  "smtp": {
+    "service": "gmail",
+    "host": "smtp.gmail.com",
+    "auth": {
+      "user": "",
+      "pass": ""
+    }
+  }
+}
