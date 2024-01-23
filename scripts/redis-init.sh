@@ -26,5 +26,4 @@ sysctl -w net.core.somaxconn=512
 sysctl vm.overcommit_memory=1
 
 # start redis server
-
 redis-server /usr/local/etc/redis/redis.conf --bind 0.0.0.0
