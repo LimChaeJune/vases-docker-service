@@ -14,6 +14,8 @@ import torch
 import cv2
 import numpy as np
 
+print(torch.cuda.is_available())
+
 def handle_connect(sid, environ):
 	print(f"socket connected with sid {sid}")
 
