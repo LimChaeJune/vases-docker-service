@@ -1,4 +1,5 @@
-document.onload = function () {
+
+document.addEventListener("DOMContentLoaded", function(){
   const signUpBtn = document.getElementById("signUp");
   const signInBtn = document.getElementById("signIn");
   const container = document.querySelector(".container");
@@ -9,4 +10,5 @@ document.onload = function () {
   signInBtn.addEventListener("click", () => {
     container.classList.remove("right-panel-active");
   });
-};
+});
+ 
