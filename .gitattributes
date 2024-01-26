@@ -1,2 +1,2 @@
-/conf/*.conf eol-lf
-/scripts/*.sh eol-lf
+*.conf text eol=lf
+*.sh text eol=lf
