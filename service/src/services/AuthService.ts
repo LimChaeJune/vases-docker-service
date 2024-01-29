@@ -1,4 +1,4 @@
-import { UserEntity } from '@app/modules/datasource/Entities';
+import { UserEntity, UserSchema } from '@app/modules/datasource/Entities';
 import passport from 'passport';
 
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -52,5 +52,44 @@ export class AuthService {
         }
       })(req);
     });
+  }
+
+  async signup(
+    email: string,
+    pwd: string,
+    name: string,
+    type: string = 'local'
+  ): Promise<boolean> {
+    try {
+      const userEntity = new UserEntity();
+
+      await userEntity.query.insert({
+        name: name,
+        email: email,
+        type: type,
+        pwd: pwd,
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async getUsers(
+    name: string,
+    offset: number,
+    limit: number
+  ): Promise<UserSchema[]> {
+    const userEntity = new UserEntity();
+
+    userEntity.query.count();
+    let query = userEntity.query.select();
+
+    if (name) query = query.where('name', name);
+
+    query = query.offset(offset);
+    query = query.limit(limit);
+    const result = await query;
+    return result;
   }
 }

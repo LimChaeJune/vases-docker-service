@@ -1,11 +1,11 @@
 import { BaseEntity } from '../BaseEntity';
 
-type SessionSchema = {
+export type SessionSchema = {
   idx: number;
   sid: string;
   sess: string;
-  expired: number
-}
+  expired: number;
+};
 
 export class SessionEntity extends BaseEntity<SessionSchema> {
   constructor(tableName: string = 'saige_session') {
@@ -14,25 +14,25 @@ export class SessionEntity extends BaseEntity<SessionSchema> {
         type: 'increments',
         comment: 'index field',
       },
-      sid : {
-        type :'string',
-        unique:true,
-        options: [255]
+      sid: {
+        type: 'string',
+        unique: true,
+        options: [255],
       },
-      sess : {
-        type :'text',
-        notNullable:true
+      sess: {
+        type: 'text',
+        notNullable: true,
       },
-      expired : {
-        type :'timestamp',
-        notNullable:true,
+      expired: {
+        type: 'timestamp',
+        notNullable: true,
         options: [
           {
             precision: 6,
           },
         ],
-        index:['idx_expired']
-      }
+        index: ['idx_expired'],
+      },
     });
   }
 }

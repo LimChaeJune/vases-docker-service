@@ -1,6 +1,6 @@
 import { BaseEntity } from '../BaseEntity';
 
-type UserSchema = {
+export type UserSchema = {
   idx: number;
   type: string;
   email: string;
