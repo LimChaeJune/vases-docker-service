@@ -3,12 +3,62 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { UserController } from './../UserController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../AuthController';
 import type { RequestHandler, Router } from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "PrefixCode_ObjectDotNotation_BaseCode__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["server:success"]},{"dataType":"enum","enums":["server:error"]},{"dataType":"enum","enums":["server:auth.invalid_password"]},{"dataType":"enum","enums":["server:auth.no_users"]},{"dataType":"enum","enums":["server:auth.exists_email"]},{"dataType":"enum","enums":["server:database.undefined"]},{"dataType":"enum","enums":["server:database.duplicated"]},{"dataType":"enum","enums":["server:database.disconnected"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseResponse_boolean.undefined_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"metadata":{"dataType":"undefined"},"message":{"dataType":"string"},"result":{"dataType":"boolean","required":true},"code":{"ref":"PrefixCode_ObjectDotNotation_BaseCode__","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Express.User": {
+        "dataType": "refObject",
+        "properties": {
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseResponse_boolean.Express.User_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"metadata":{"ref":"Express.User"},"message":{"dataType":"string"},"result":{"dataType":"boolean","required":true},"code":{"ref":"PrefixCode_ObjectDotNotation_BaseCode__","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LoginDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "email": {"dataType":"string","required":true},
+            "pwd": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseResponse_boolean.number-Array_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"metadata":{"dataType":"array","array":{"dataType":"double"}},"message":{"dataType":"string"},"result":{"dataType":"boolean","required":true},"code":{"ref":"PrefixCode_ObjectDotNotation_BaseCode__","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SignupDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "email": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true,"validators":{"minLength":{"value":2},"maxLength":{"value":50}}},
+            "pwd": {"dataType":"string","required":true,"validators":{"minLength":{"value":8},"maxLength":{"value":50}}},
+            "meta_json": {"dataType":"string"},
+            "auto_login": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -19,6 +69,57 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
+        app.put('/user/profile',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.updateProfile)),
+
+            function UserController_updateProfile(request: any, response: any, next: any) {
+            const args = {
+                    name: {"in":"body-prop","name":"name","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new UserController();
+
+
+              const promise = controller.updateProfile.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/user/:idx',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.deleteDataset)),
+
+            function UserController_deleteDataset(request: any, response: any, next: any) {
+            const args = {
+                    idx: {"in":"path","name":"idx","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new UserController();
+
+
+              const promise = controller.deleteDataset.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/auth/check',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.check)),
@@ -75,8 +176,7 @@ export function RegisterRoutes(app: Router) {
 
             function AuthController_login(request: any, response: any, next: any) {
             const args = {
-                    email: {"in":"body-prop","name":"email","required":true,"dataType":"string"},
-                    pwd: {"in":"body-prop","name":"pwd","required":true,"dataType":"string"},
+                    body: {"in":"body","name":"body","required":true,"ref":"LoginDTO"},
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
@@ -96,16 +196,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/auth',
+        app.post('/auth/signup',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.updateDataset)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.signup)),
 
-            function AuthController_updateDataset(request: any, response: any, next: any) {
+            function AuthController_signup(request: any, response: any, next: any) {
             const args = {
-                    idx: {"in":"body-prop","name":"idx","required":true,"dataType":"double"},
-                    name: {"in":"body-prop","name":"name","required":true,"dataType":"string"},
-                    type: {"in":"body-prop","name":"type","required":true,"dataType":"string"},
-                    meta: {"in":"body-prop","name":"meta","required":true,"dataType":"string"},
+                    body: {"in":"body","name":"body","required":true,"ref":"SignupDTO"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -117,32 +215,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new AuthController();
 
 
-              const promise = controller.updateDataset.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/auth/:idx',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.deleteDataset)),
-
-            function AuthController_deleteDataset(request: any, response: any, next: any) {
-            const args = {
-                    idx: {"in":"path","name":"idx","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new AuthController();
-
-
-              const promise = controller.deleteDataset.apply(controller, validatedArgs as any);
+              const promise = controller.signup.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

@@ -15,6 +15,8 @@ const configure_1 = __importDefault(require("./configure"));
 const routes_1 = require("@app/controllers/http/routes");
 const modules_1 = __importDefault(require("@app/modules"));
 const BaseEntity_1 = require("@app/modules/datasource/BaseEntity");
+const tsoa_1 = require("tsoa");
+const response_1 = require("@app/types/response");
 const KnexSessionStore = (0, connect_session_knex_1.default)(express_session_1.default);
 // global config 설정
 const config = (0, configure_1.default)();
@@ -27,10 +29,11 @@ modules_1.default.initialize().then(() => {
         createtable: false,
         tablename: 'saige_session',
     });
-    app.use('/public', express_1.default.static(path_1.default.join(__dirname, '../public')));
-    app.use(express_1.default.urlencoded());
-    app.use(express_1.default.json());
-    app.use((0, express_session_1.default)({
+    const router = express_1.default.Router();
+    router.use('/public', express_1.default.static(path_1.default.join(__dirname, '../public')));
+    router.use(express_1.default.urlencoded());
+    router.use(express_1.default.json());
+    router.use((0, express_session_1.default)({
         secret: 'saige',
         cookie: {
             maxAge: 1000 * 60 * config.session_time,
@@ -40,16 +43,16 @@ modules_1.default.initialize().then(() => {
         store: session_store,
         rolling: true,
     }));
-    app.use(passport_1.default.initialize());
-    app.use(passport_1.default.session());
-    app.use('/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(undefined, {
+    router.use(passport_1.default.initialize());
+    router.use(passport_1.default.session());
+    router.use('/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(undefined, {
         swaggerOptions: {
-            url: '/public/swagger.json',
+            url: '/service/v1/public/swagger.json',
         },
     }));
-    app.get('/redoc', (0, redoc_express_1.default)({
+    router.get('/redoc', (0, redoc_express_1.default)({
         title: 'API Docs',
-        specUrl: '/public/swagger.json',
+        specUrl: '/service/v1/public/swagger.json',
         nonce: '', // <= it is optional,we can omit this key and value
         // we are now start supporting the redocOptions object
         // you can omit the options object if you don't need it
@@ -76,7 +79,40 @@ modules_1.default.initialize().then(() => {
             },
         },
     }));
-    (0, routes_1.RegisterRoutes)(app);
+    router.use(function ensureAuth(req, res, next) {
+        if (req.isAuthenticated() || req.path.startsWith('/auth')) {
+            next();
+        }
+        else {
+            res.status(401).send({ message: 'Not Allowed' });
+        }
+    });
+    (0, routes_1.RegisterRoutes)(router);
+    router.use(function errorHandler(err, req, res, next) {
+        if (err instanceof tsoa_1.ValidateError) {
+            console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
+            return res.status(422).send({
+                message: 'Validation Failed',
+                details: err.fields,
+            });
+        }
+        if (err instanceof response_1.CustomValidationError) {
+            return res.status(422).send({
+                message: 'Validation Failed',
+                details: err.fields,
+            });
+        }
+        if (err instanceof Error) {
+            return res.status(500).send({ message: 'Interval Server Error' });
+        }
+        next();
+    });
+    // app.use(function notFoundHandler(req, res, next) {
+    //   res.status(404).send({
+    //     message: 'Not Found',
+    //   });
+    // });
+    app.use('/service/v1', router);
     app
         .listen(global.config.port, global.config.host, () => {
         console.log('server process');

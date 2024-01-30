@@ -12,10 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
+exports.AuthService = exports.AuthErrorType = void 0;
 const Entities_1 = require("@app/modules/datasource/Entities");
+const logger_1 = __importDefault(require("@app/modules/logger"));
 const passport_1 = __importDefault(require("passport"));
 const passport_local_1 = require("passport-local");
+var AuthErrorType;
+(function (AuthErrorType) {
+    AuthErrorType[AuthErrorType["noUsers"] = 1] = "noUsers";
+    AuthErrorType[AuthErrorType["invalidPwd"] = 2] = "invalidPwd";
+})(AuthErrorType || (exports.AuthErrorType = AuthErrorType = {}));
 passport_1.default.serializeUser((user, done) => {
     done(null, user);
 });
@@ -29,36 +35,48 @@ passport_1.default.use('local', new passport_local_1.Strategy({
     passReqToCallback: false,
 }, (email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
     const user = new Entities_1.UserEntity();
-    const rows = yield user.query
-        .select()
-        .where({ email: email, pwd: password });
+    const rows = yield user.query.select().where({ email: email });
+    console.log(rows);
     if (rows.length > 0) {
-        done(null, { email: email, type: 'local' });
+        if (rows[0].pwd == password) {
+            rows[0].pwd = '';
+            done(null, rows[0]);
+        }
+        else {
+            done(AuthErrorType.invalidPwd, false);
+        }
     }
     else {
-        done(null, false, { message: 'No User' });
+        done(AuthErrorType.noUsers, false);
     }
 })));
 class AuthService {
     constructor() { }
     login(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                passport_1.default.authenticate('local', (err, user, info) => {
-                    if (err) {
+            return new Promise((resolve) => {
+                try {
+                    passport_1.default.authenticate('local', (err, user, info) => {
                         console.log(err);
-                        resolve(false);
-                    }
-                    else {
-                        req.logIn(user, (loginErr) => {
-                            console.log(loginErr);
-                            if (err)
-                                resolve(false);
-                            else
-                                resolve(true);
-                        });
-                    }
-                })(req);
+                        if (err) {
+                            if (err == AuthErrorType.noUsers) {
+                                resolve({ code: 'server:auth.no_users', result: false });
+                            }
+                            else if (err == AuthErrorType.invalidPwd) {
+                                resolve({ code: 'server:auth.invalid_password', result: false });
+                            }
+                        }
+                        else {
+                            req.logIn(user, (loginErr) => {
+                                resolve({ code: 'server:success', result: true });
+                            });
+                        }
+                    })(req);
+                }
+                catch (error) {
+                    logger_1.default.error('unknown error : ', error.toString());
+                    resolve({ code: 'server:error', result: true });
+                }
             });
         });
     }

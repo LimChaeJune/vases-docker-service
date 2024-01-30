@@ -25,7 +25,7 @@ export class BaseEntity<T> {
     this.tableName = tableName;
     this.schema = schema;
   }
-  create() {
+  public create() {
     return BaseEntity.database.schema
       .hasTable(this.tableName)
       .then((exists) => {
@@ -69,7 +69,7 @@ export class BaseEntity<T> {
       });
   }
 
-  private drop() {
+  public drop() {
     return BaseEntity.database.schema.dropTable(this.tableName);
   }
 

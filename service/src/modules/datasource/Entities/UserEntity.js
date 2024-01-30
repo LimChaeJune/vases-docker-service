@@ -28,6 +28,19 @@ class UserEntity extends BaseEntity_1.BaseEntity {
                 type: 'string',
                 options: [50],
             },
+            meta_json: {
+                type: 'text',
+            },
+            updated_time: {
+                type: 'timestamp',
+                options: [
+                    {
+                        precision: 6,
+                    },
+                ],
+                index: ['idx_created_time'],
+                default: BaseEntity_1.BaseEntity.database.fn.now(),
+            },
             created_time: {
                 type: 'timestamp',
                 options: [

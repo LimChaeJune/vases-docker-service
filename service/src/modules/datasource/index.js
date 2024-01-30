@@ -59,12 +59,14 @@ class DataConnector {
             BaseEntity_1.BaseEntity.database = this.database;
             const user = new Entities_1.UserEntity();
             const session = new Entities_1.SessionEntity();
+            yield user.drop();
+            yield session.drop();
             yield user.create();
             yield session.create();
             yield user.query.truncate();
             yield user.query.insert({
-                email: 'admin',
-                pwd: 'admin',
+                email: 'admin@saige.ai',
+                pwd: 'admin8282',
                 type: 'local',
                 name: '김석환',
             });

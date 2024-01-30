@@ -1,6 +1,6 @@
 import 'module-alias/register';
 import path from 'path';
-import express from 'express';
+import express, { NextFunction } from 'express';
 import session from 'express-session';
 import connectSession from 'connect-session-knex';
 import passport from 'passport';
@@ -10,6 +10,8 @@ import configure from './configure';
 import { RegisterRoutes } from '@app/controllers/http/routes';
 import modules from '@app/modules';
 import { BaseEntity } from '@app/modules/datasource/BaseEntity';
+import { ValidateError } from 'tsoa';
+import { CustomValidationError } from '@app/types/response';
 
 const KnexSessionStore = connectSession(session);
 
@@ -48,7 +50,6 @@ modules.initialize().then(() => {
   router.use(passport.initialize());
   router.use(passport.session());
 
-  
   router.use(
     '/docs',
     swaggerUi.serve,
@@ -91,9 +92,51 @@ modules.initialize().then(() => {
       },
     })
   );
-  
+
+  router.use(function ensureAuth(req, res, next) {
+    if (req.isAuthenticated() || req.path.startsWith('/auth')) {
+      next();
+    } else {
+      res.status(401).send({ message: 'Not Allowed' });
+    }
+  });
+
   RegisterRoutes(router);
-  app.use("/service/v1", router);
+
+  router.use(function errorHandler(
+    err: unknown,
+    req: any,
+    res: any,
+    next: NextFunction
+  ) {
+    if (err instanceof ValidateError) {
+      console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
+      return res.status(422).send({
+        message: 'Validation Failed',
+        details: err.fields,
+      });
+    }
+
+    if (err instanceof CustomValidationError) {
+      return res.status(422).send({
+        message: 'Validation Failed',
+        details: err.fields,
+      });
+    }
+
+    if (err instanceof Error) {
+      return res.status(500).send({ message: 'Interval Server Error' });
+    }
+
+    next();
+  });
+  // app.use(function notFoundHandler(req, res, next) {
+  //   res.status(404).send({
+  //     message: 'Not Found',
+  //   });
+  // });
+
+  app.use('/service/v1', router);
 
   app
     .listen(global.config.port, global.config.host, () => {

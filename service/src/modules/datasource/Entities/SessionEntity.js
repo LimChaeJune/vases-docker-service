@@ -12,11 +12,11 @@ class SessionEntity extends BaseEntity_1.BaseEntity {
             sid: {
                 type: 'string',
                 unique: true,
-                options: [255]
+                options: [255],
             },
             sess: {
                 type: 'text',
-                notNullable: true
+                notNullable: true,
             },
             expired: {
                 type: 'timestamp',
@@ -26,8 +26,8 @@ class SessionEntity extends BaseEntity_1.BaseEntity {
                         precision: 6,
                     },
                 ],
-                index: ['idx_expired']
-            }
+                index: ['idx_expired'],
+            },
         });
     }
 }

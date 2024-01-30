@@ -51,13 +51,16 @@ export class DataConnector {
     const user = new UserEntity();
     const session = new SessionEntity();
 
+    await user.drop();
+    await session.drop();
+
     await user.create();
     await session.create();
 
     await user.query.truncate();
     await user.query.insert({
-      email: 'admin',
-      pwd: 'admin',
+      email: 'admin@saige.ai',
+      pwd: 'admin8282',
       type: 'local',
       name: '김석환',
     });

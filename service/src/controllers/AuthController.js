@@ -21,13 +21,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthController = void 0;
+exports.AuthController = exports.SignupDTO = exports.LoginDTO = void 0;
 const AuthService_1 = require("@app/services/AuthService");
+const UserService_1 = require("@app/services/UserService");
+const response_1 = require("@app/types/response");
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
 const tsoa_1 = require("tsoa");
+class LoginDTO {
+}
+exports.LoginDTO = LoginDTO;
+__decorate([
+    (0, class_transformer_1.Expose)(),
+    (0, class_validator_1.IsEmail)(),
+    __metadata("design:type", String)
+], LoginDTO.prototype, "email", void 0);
+class SignupDTO {
+}
+exports.SignupDTO = SignupDTO;
 let AuthController = class AuthController extends tsoa_1.Controller {
     check(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            return req.isAuthenticated();
+            return {
+                code: 'server:success',
+                result: req.isAuthenticated(),
+                metadata: req.user,
+            };
         });
     }
     logout(req) {
@@ -35,28 +54,51 @@ let AuthController = class AuthController extends tsoa_1.Controller {
             return new Promise((resolve) => {
                 req.logout({ keepSessionInfo: false }, (err) => {
                     if (err)
-                        resolve(false);
+                        resolve({
+                            code: 'server:error',
+                            result: false,
+                        });
                     else
-                        resolve(true);
+                        resolve({
+                            code: 'server:success',
+                            result: true,
+                        });
                 });
             });
         });
     }
-    login(email, pwd, req) {
+    login(body, req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const authService = new AuthService_1.AuthService();
-            const result = yield authService.login(req);
+            const dto = (0, class_transformer_1.plainToClass)(LoginDTO, body);
+            const errors = yield (0, class_validator_1.validate)(dto, { skipMissingProperties: true });
+            if (errors.length > 0)
+                throw new response_1.CustomValidationError(errors);
+            const service = new AuthService_1.AuthService();
+            const result = yield service.login(req);
             return result;
         });
     }
-    updateDataset(idx, name, type, meta) {
+    signup(body, req) {
         return __awaiter(this, void 0, void 0, function* () {
-            return true;
-        });
-    }
-    deleteDataset(idx) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return true;
+            // const dto = plainToClass(SignupDTO, body);
+            // const errors = await validate(dto, { skipMissingProperties: true });
+            // if (errors.length > 0) throw new CustomValidationError(errors);
+            const { email, pwd, name, meta_json = '', auto_login = false } = body;
+            const userService = new UserService_1.UserService();
+            const ret = yield userService.addUser(email, pwd, name, meta_json);
+            if (ret.code != 'server:success') {
+                if (ret.code == 'server:database.duplicated') {
+                    return {
+                        code: 'server:auth.exists_email',
+                        result: false,
+                    };
+                }
+            }
+            if (auto_login) {
+                const authService = new AuthService_1.AuthService();
+                yield authService.login(req);
+            }
+            return ret;
         });
     }
 };
@@ -76,31 +118,25 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
 __decorate([
+    (0, tsoa_1.Example)({
+        email: 'admin@saige.ai',
+        pwd: 'admin8282',
+    }),
     (0, tsoa_1.Post)('/login'),
-    __param(0, (0, tsoa_1.BodyProp)()),
-    __param(1, (0, tsoa_1.BodyProp)()),
-    __param(2, (0, tsoa_1.Request)()),
+    __param(0, (0, tsoa_1.Body)()),
+    __param(1, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [LoginDTO, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, tsoa_1.Put)(),
-    __param(0, (0, tsoa_1.BodyProp)()),
-    __param(1, (0, tsoa_1.BodyProp)()),
-    __param(2, (0, tsoa_1.BodyProp)()),
-    __param(3, (0, tsoa_1.BodyProp)()),
+    (0, tsoa_1.Post)('/signup'),
+    __param(0, (0, tsoa_1.Body)()),
+    __param(1, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String, String, String]),
+    __metadata("design:paramtypes", [SignupDTO, Object]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "updateDataset", null);
-__decorate([
-    (0, tsoa_1.Delete)('{idx}'),
-    __param(0, (0, tsoa_1.Path)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "deleteDataset", null);
+], AuthController.prototype, "signup", null);
 exports.AuthController = AuthController = __decorate([
     (0, tsoa_1.Route)('auth'),
     (0, tsoa_1.Tags)('Auth')
