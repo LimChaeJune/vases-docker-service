@@ -69,28 +69,32 @@ export class UserService {
   }
 
   // 관리자가 회원관리시
-  async deleteUserByIndex(idx: number[]): Promise<boolean> {
+  async deleteUserByIndex(idx: number[]): Promise<number> {
     const userEntity = new UserEntity();
-    const test = await userEntity.query.delete().whereIn('idx', idx);
-    console.log(test);
-    return true;
+    const result = await userEntity.query.delete().whereIn('idx', idx);
+    return result;
   }
 
   async getUsers(
-    name: string,
     offset: number,
-    limit: number
-  ): Promise<UserSchema[]> {
+    limit: number,
+    name?: string,
+    email?: string
+  ): Promise<{ users: UserSchema[]; total: number }> {
     const userEntity = new UserEntity();
 
-    userEntity.query.count();
     let query = userEntity.query.select();
 
     if (name) query = query.where('name', name);
+    if (email) query = query.andWhere('email', email);
+
+    const total = (await query.clone().count('idx as cnt').first()) as any;
+
+    console.log(total);
 
     query = query.offset(offset);
     query = query.limit(limit);
     const result = await query;
-    return result;
+    return { users: result, total: total.cnt };
   }
 }

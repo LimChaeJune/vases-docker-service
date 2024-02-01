@@ -24,18 +24,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = exports.SignupDTO = exports.LoginDTO = void 0;
 const AuthService_1 = require("@app/services/AuthService");
 const UserService_1 = require("@app/services/UserService");
-const response_1 = require("@app/types/response");
-const class_transformer_1 = require("class-transformer");
-const class_validator_1 = require("class-validator");
 const tsoa_1 = require("tsoa");
 class LoginDTO {
 }
 exports.LoginDTO = LoginDTO;
-__decorate([
-    (0, class_transformer_1.Expose)(),
-    (0, class_validator_1.IsEmail)(),
-    __metadata("design:type", String)
-], LoginDTO.prototype, "email", void 0);
 class SignupDTO {
 }
 exports.SignupDTO = SignupDTO;
@@ -69,10 +61,9 @@ let AuthController = class AuthController extends tsoa_1.Controller {
     }
     login(body, req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const dto = (0, class_transformer_1.plainToClass)(LoginDTO, body);
-            const errors = yield (0, class_validator_1.validate)(dto, { skipMissingProperties: true });
-            if (errors.length > 0)
-                throw new response_1.CustomValidationError(errors);
+            // const dto = plainToClass(LoginDTO, body);
+            // const errors = await validate(dto, { skipMissingProperties: true });
+            // if (errors.length > 0) throw new CustomValidationError(errors);
             const service = new AuthService_1.AuthService();
             const result = yield service.login(req);
             return result;
@@ -121,7 +112,7 @@ __decorate([
     (0, tsoa_1.Example)({
         email: 'admin@saige.ai',
         pwd: 'admin8282',
-    }),
+    }, 'admin login sample'),
     (0, tsoa_1.Post)('/login'),
     __param(0, (0, tsoa_1.Body)()),
     __param(1, (0, tsoa_1.Request)()),
@@ -139,6 +130,8 @@ __decorate([
 ], AuthController.prototype, "signup", null);
 exports.AuthController = AuthController = __decorate([
     (0, tsoa_1.Route)('auth'),
-    (0, tsoa_1.Tags)('Auth')
+    (0, tsoa_1.Tags)('Auth'),
+    (0, tsoa_1.Response)(422, 'Validation Failed'),
+    (0, tsoa_1.Response)(500, 'Unhandled')
 ], AuthController);
 //# sourceMappingURL=AuthController.js.map

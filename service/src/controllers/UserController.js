@@ -35,9 +35,29 @@ let UserController = class UserController extends tsoa_1.Controller {
             };
         });
     }
-    deleteDataset(idx) {
+    getUsers(offset, limit) {
         return __awaiter(this, void 0, void 0, function* () {
-            return true;
+            const service = new UserService_1.UserService();
+            const result = yield service.getUsers(offset, limit);
+            return {
+                code: 'server:success',
+                result: result.users,
+                metadata: {
+                    total: result.total,
+                },
+            };
+        });
+    }
+    deleteUser(idx) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const service = new UserService_1.UserService();
+            const result = yield service.deleteUserByIndex([idx]);
+            return {
+                code: 'server:success',
+                result: {
+                    deleteCnt: result,
+                },
+            };
         });
     }
 };
@@ -51,12 +71,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "updateProfile", null);
 __decorate([
+    (0, tsoa_1.Get)('/list'),
+    __param(0, (0, tsoa_1.Query)()),
+    __param(1, (0, tsoa_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getUsers", null);
+__decorate([
     (0, tsoa_1.Delete)('/{idx}'),
     __param(0, (0, tsoa_1.Path)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "deleteDataset", null);
+], UserController.prototype, "deleteUser", null);
 exports.UserController = UserController = __decorate([
     (0, tsoa_1.Route)('user'),
     (0, tsoa_1.Tags)('User'),

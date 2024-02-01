@@ -21,6 +21,26 @@ const models = {
         "type": { "dataType": "nestedObjectLiteral", "nestedProperties": { "metadata": { "dataType": "undefined" }, "message": { "dataType": "string" }, "result": { "dataType": "boolean", "required": true }, "code": { "ref": "PrefixCode_ObjectDotNotation_BaseCode__", "required": true } }, "validators": {} },
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserMetaJson": {
+        "dataType": "refAlias",
+        "type": { "dataType": "nestedObjectLiteral", "nestedProperties": { "test": { "dataType": "string", "required": true } }, "validators": {} },
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserSchema": {
+        "dataType": "refAlias",
+        "type": { "dataType": "nestedObjectLiteral", "nestedProperties": { "created_time": { "dataType": "double", "required": true }, "updated_time": { "dataType": "double", "required": true }, "meta_json": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "ref": "UserMetaJson" }], "required": true }, "name": { "dataType": "string", "required": true }, "pwd": { "dataType": "string", "required": true }, "email": { "dataType": "string", "required": true }, "type": { "dataType": "string", "required": true }, "idx": { "dataType": "double", "required": true } }, "validators": {} },
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseResponse_UserSchema-Array._total-number__": {
+        "dataType": "refAlias",
+        "type": { "dataType": "nestedObjectLiteral", "nestedProperties": { "metadata": { "dataType": "nestedObjectLiteral", "nestedProperties": { "total": { "dataType": "double", "required": true } } }, "message": { "dataType": "string" }, "result": { "dataType": "array", "array": { "dataType": "refAlias", "ref": "UserSchema" }, "required": true }, "code": { "ref": "PrefixCode_ObjectDotNotation_BaseCode__", "required": true } }, "validators": {} },
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseResponse__deleteCnt-number_.undefined_": {
+        "dataType": "refAlias",
+        "type": { "dataType": "nestedObjectLiteral", "nestedProperties": { "metadata": { "dataType": "undefined" }, "message": { "dataType": "string" }, "result": { "dataType": "nestedObjectLiteral", "nestedProperties": { "deleteCnt": { "dataType": "double", "required": true } }, "required": true }, "code": { "ref": "PrefixCode_ObjectDotNotation_BaseCode__", "required": true } }, "validators": {} },
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Express.User": {
         "dataType": "refObject",
         "properties": {},
@@ -35,8 +55,8 @@ const models = {
     "LoginDTO": {
         "dataType": "refObject",
         "properties": {
-            "email": { "dataType": "string", "required": true },
-            "pwd": { "dataType": "string", "required": true },
+            "email": { "dataType": "string", "default": "admin@saige.ai", "required": true },
+            "pwd": { "dataType": "string", "default": "admin8282", "required": true, "validators": { "minLength": { "value": 8 }, "maxLength": { "value": 50 } } },
         },
         "additionalProperties": false,
     },
@@ -84,7 +104,25 @@ function RegisterRoutes(app) {
         }
     });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.delete('/user/:idx', ...((0, runtime_1.fetchMiddlewares)(UserController_1.UserController)), ...((0, runtime_1.fetchMiddlewares)(UserController_1.UserController.prototype.deleteDataset)), function UserController_deleteDataset(request, response, next) {
+    app.get('/user/list', ...((0, runtime_1.fetchMiddlewares)(UserController_1.UserController)), ...((0, runtime_1.fetchMiddlewares)(UserController_1.UserController.prototype.getUsers)), function UserController_getUsers(request, response, next) {
+        const args = {
+            offset: { "in": "query", "name": "offset", "required": true, "dataType": "double" },
+            limit: { "in": "query", "name": "limit", "required": true, "dataType": "double" },
+        };
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request, response);
+            const controller = new UserController_1.UserController();
+            const promise = controller.getUsers.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, undefined, next);
+        }
+        catch (err) {
+            return next(err);
+        }
+    });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.delete('/user/:idx', ...((0, runtime_1.fetchMiddlewares)(UserController_1.UserController)), ...((0, runtime_1.fetchMiddlewares)(UserController_1.UserController.prototype.deleteUser)), function UserController_deleteUser(request, response, next) {
         const args = {
             idx: { "in": "path", "name": "idx", "required": true, "dataType": "double" },
         };
@@ -93,7 +131,7 @@ function RegisterRoutes(app) {
         try {
             validatedArgs = getValidatedArgs(args, request, response);
             const controller = new UserController_1.UserController();
-            const promise = controller.deleteDataset.apply(controller, validatedArgs);
+            const promise = controller.deleteUser.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, undefined, next);
         }
         catch (err) {

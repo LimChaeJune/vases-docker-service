@@ -39,6 +39,127 @@
 				],
 				"type": "object"
 			},
+			"UserMetaJson": {
+				"properties": {
+					"test": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"test"
+				],
+				"type": "object"
+			},
+			"UserSchema": {
+				"properties": {
+					"created_time": {
+						"type": "number",
+						"format": "double"
+					},
+					"updated_time": {
+						"type": "number",
+						"format": "double"
+					},
+					"meta_json": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/components/schemas/UserMetaJson"
+							}
+						]
+					},
+					"name": {
+						"type": "string"
+					},
+					"pwd": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"idx": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"created_time",
+					"updated_time",
+					"meta_json",
+					"name",
+					"pwd",
+					"email",
+					"type",
+					"idx"
+				],
+				"type": "object"
+			},
+			"BaseResponse_UserSchema-Array._total-number__": {
+				"properties": {
+					"metadata": {
+						"properties": {
+							"total": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"total"
+						],
+						"type": "object"
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"items": {
+							"$ref": "#/components/schemas/UserSchema"
+						},
+						"type": "array"
+					},
+					"code": {
+						"$ref": "#/components/schemas/PrefixCode_ObjectDotNotation_BaseCode__"
+					}
+				},
+				"required": [
+					"result",
+					"code"
+				],
+				"type": "object"
+			},
+			"BaseResponse__deleteCnt-number_.undefined_": {
+				"properties": {
+					"metadata": {},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"properties": {
+							"deleteCnt": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"deleteCnt"
+						],
+						"type": "object"
+					},
+					"code": {
+						"$ref": "#/components/schemas/PrefixCode_ObjectDotNotation_BaseCode__"
+					}
+				},
+				"required": [
+					"result",
+					"code"
+				],
+				"type": "object"
+			},
 			"Express.User": {
 				"properties": {},
 				"type": "object",
@@ -68,16 +189,17 @@
 			"LoginDTO": {
 				"properties": {
 					"email": {
-						"type": "string"
+						"type": "string",
+						"format": "email",
+						"default": "admin@saige.ai"
 					},
 					"pwd": {
-						"type": "string"
+						"type": "string",
+						"default": "admin8282",
+						"minLength": 8,
+						"maxLength": 50
 					}
 				},
-				"required": [
-					"email",
-					"pwd"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -190,7 +312,21 @@
 									"properties": {
 										"details": {
 											"properties": {},
-											"additionalProperties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
 											"type": "object"
 										},
 										"message": {
@@ -250,16 +386,16 @@
 				}
 			}
 		},
-		"/user/{idx}": {
-			"delete": {
-				"operationId": "DeleteDataset",
+		"/user/list": {
+			"get": {
+				"operationId": "GetUsers",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "boolean"
+									"$ref": "#/components/schemas/BaseResponse_UserSchema-Array._total-number__"
 								}
 							}
 						}
@@ -290,7 +426,136 @@
 									"properties": {
 										"details": {
 											"properties": {},
-											"additionalProperties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "offset",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/user/{idx}": {
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse__deleteCnt-number_.undefined_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
 											"type": "object"
 										},
 										"message": {
@@ -355,6 +620,62 @@
 								}
 							}
 						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -374,6 +695,62 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/BaseResponse_boolean.undefined_"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -398,12 +775,68 @@
 									"$ref": "#/components/schemas/BaseResponse_boolean.undefined_"
 								},
 								"examples": {
-									"Example 1": {
+									"admin login sample": {
 										"value": {
 											"email": "admin@saige.ai",
 											"pwd": "admin8282"
 										}
 									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -436,6 +869,62 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/BaseResponse_boolean.number-Array_"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
 								}
 							}
 						}

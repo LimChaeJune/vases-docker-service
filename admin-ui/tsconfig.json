@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "experimentalDecorators": true,
+    "target": "ES2017",
+    "lib": ["es6", "dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "useDefineForClassFields": true
+  },
+  "include": ["src"],
+  "references": [{
+    "path": "./tsconfig.node.json"
+  }]
+}

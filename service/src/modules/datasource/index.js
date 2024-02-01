@@ -67,8 +67,8 @@ class DataConnector {
             yield user.query.insert({
                 email: 'admin@saige.ai',
                 pwd: 'admin8282',
-                type: 'local',
-                name: '김석환',
+                type: 'admin',
+                name: '관리자',
             });
         });
     }

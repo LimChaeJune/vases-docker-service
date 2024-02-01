@@ -20,17 +20,24 @@ import {
   Route,
   Post,
   Tags,
-  BodyProp,
   Example,
   Controller,
   Request,
   Body,
+  Response,
 } from 'tsoa';
 
 export class LoginDTO {
-  @Expose()
-  @IsEmail()
+  /**
+   * @default "admin@saige.ai"
+   * @format email
+   */
   email: string;
+  /**
+   * @default "admin8282"
+   * @minLength 8
+   * @maxLength 50
+   */
   pwd: string;
 }
 
@@ -55,6 +62,11 @@ export class SignupDTO {
 
 @Route('auth')
 @Tags('Auth')
+@Response<{
+  message: string;
+  details: { [name: string]: { value: string; message: string } };
+}>(422, 'Validation Failed')
+@Response<{ message: string }>(500, 'Unhandled')
 export class AuthController extends Controller {
   @Get('/check')
   public async check(
@@ -85,16 +97,19 @@ export class AuthController extends Controller {
     });
   }
 
-  @Example({
-    email: 'admin@saige.ai',
-    pwd: 'admin8282',
-  })
+  @Example(
+    {
+      email: 'admin@saige.ai',
+      pwd: 'admin8282',
+    },
+    'admin login sample'
+  )
   @Post('/login')
   public async login(@Body() body: LoginDTO, @Request() req: Express.Request) {
-    const dto = plainToClass(LoginDTO, body);
-    const errors = await validate(dto, { skipMissingProperties: true });
+    // const dto = plainToClass(LoginDTO, body);
+    // const errors = await validate(dto, { skipMissingProperties: true });
 
-    if (errors.length > 0) throw new CustomValidationError(errors);
+    // if (errors.length > 0) throw new CustomValidationError(errors);
 
     const service = new AuthService();
     const result = await service.login(req);

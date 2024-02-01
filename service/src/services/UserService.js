@@ -77,22 +77,24 @@ class UserService {
     deleteUserByIndex(idx) {
         return __awaiter(this, void 0, void 0, function* () {
             const userEntity = new Entities_1.UserEntity();
-            const test = yield userEntity.query.delete().whereIn('idx', idx);
-            console.log(test);
-            return true;
+            const result = yield userEntity.query.delete().whereIn('idx', idx);
+            return result;
         });
     }
-    getUsers(name, offset, limit) {
+    getUsers(offset, limit, name, email) {
         return __awaiter(this, void 0, void 0, function* () {
             const userEntity = new Entities_1.UserEntity();
-            userEntity.query.count();
             let query = userEntity.query.select();
             if (name)
                 query = query.where('name', name);
+            if (email)
+                query = query.andWhere('email', email);
+            const total = (yield query.clone().count('idx as cnt').first());
+            console.log(total);
             query = query.offset(offset);
             query = query.limit(limit);
             const result = yield query;
-            return result;
+            return { users: result, total: total.cnt };
         });
     }
 }
