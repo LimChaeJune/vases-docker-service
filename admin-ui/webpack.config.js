@@ -8,7 +8,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { ProvidePlugin, DefinePlugin } = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const PORT = process.env.PORT || 8080;
 
@@ -53,7 +52,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css?$/,
-          use: [MiniCssExtractPlugin.loader, 'style-loader', 'css-loader'],
+          use: ['style-loader', 'css-loader'],
         },
         {
           test: /\.svg$/,
