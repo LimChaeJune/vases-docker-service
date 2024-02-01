@@ -8,6 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { ProvidePlugin, DefinePlugin } = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const PORT = process.env.PORT || 8080;
 
@@ -18,7 +19,6 @@ module.exports = (env, argv) => {
   const { mode } = argv;
   return {
     devtool: undefined,
-    mode: 'development',
     entry: './src/index.tsx',
     stats: 'minimal',
     output: {
@@ -27,8 +27,13 @@ module.exports = (env, argv) => {
       publicPath: '/',
     },
     optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
       minimize: true,
-      minimizer: [new TerserPlugin({ parallel: true })],
+      minimizer: [
+        new TerserPlugin({ extractComments: false }), // license comment 안나오게
+      ],
     },
     resolve: {
       modules: ['node_modules'],
@@ -48,7 +53,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css?$/,
-          use: ['style-loader', 'css-loader'],
+          use: [MiniCssExtractPlugin.loader, 'style-loader', 'css-loader'],
         },
         {
           test: /\.svg$/,

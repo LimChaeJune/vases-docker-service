@@ -22,7 +22,7 @@ export default ({ mode }) => {
     build: {
       outDir: './dist',
       emptyOutDir: false,
-      minify: false,
+      minify: true,
       rollupOptions: {
         input: {
           app: './index.html',
