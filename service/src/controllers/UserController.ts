@@ -18,6 +18,7 @@ import {
   Response,
   SuccessResponse,
 } from 'tsoa';
+import { Router } from 'express-ws';
 
 @Route('user')
 @Tags('User')
@@ -44,12 +45,23 @@ export class UserController extends Controller {
 
   @Get('/list')
   public async getUsers(
-    @Query() offset: number,
-    @Query() limit: number
+    @Query() page?: number,
+    @Query() pageSize?: number,
+    @Query() search?: string,
+    @Query() searchField?: string,
+    @Query() sort?: string,
+    @Query() order?: string
   ): Promise<BaseResponse<UserSchema[], { total: number }>> {
     const service = new UserService();
 
-    const result = await service.getUsers(offset, limit);
+    const result = await service.getUsers(
+      page,
+      pageSize,
+      search,
+      searchField,
+      sort,
+      order
+    );
 
     return {
       code: 'server:success',

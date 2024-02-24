@@ -17,6 +17,7 @@ const modules_1 = __importDefault(require("@app/modules"));
 const BaseEntity_1 = require("@app/modules/datasource/BaseEntity");
 const tsoa_1 = require("tsoa");
 const response_1 = require("@app/types/response");
+const express_ws_1 = __importDefault(require("express-ws"));
 const KnexSessionStore = (0, connect_session_knex_1.default)(express_session_1.default);
 // global config 설정
 const config = (0, configure_1.default)();
@@ -24,6 +25,19 @@ global.config = config;
 console.log(config);
 modules_1.default.initialize().then(() => {
     const app = (0, express_1.default)();
+    const wsInstance = (0, express_ws_1.default)(app);
+    const send = (msg, targets) => {
+        wsInstance.getWss().clients.forEach((client) => {
+            if (targets && targets.length > 0) {
+                if (client.user && targets.includes(client.user.idx)) {
+                    client.send(msg);
+                }
+            }
+            else {
+                client.send(msg);
+            }
+        });
+    };
     const session_store = new KnexSessionStore({
         knex: BaseEntity_1.BaseEntity.database,
         createtable: false,
@@ -112,6 +126,19 @@ modules_1.default.initialize().then(() => {
     //     message: 'Not Found',
     //   });
     // });
+    router.ws('*', (ws, req) => {
+        if (!req.user) {
+            ws.close();
+            return;
+        }
+        ws.user = req.user;
+        ws.on('message', (msg) => {
+            console.log(msg);
+        });
+        ws.on('close', () => {
+            console.log('WebSocket was closed');
+        });
+    });
     app.use('/service/v1', router);
     app
         .listen(global.config.port, global.config.host, () => {

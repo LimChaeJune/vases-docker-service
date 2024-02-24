@@ -14,6 +14,7 @@ import {
   Matches,
   validate,
 } from 'class-validator';
+import { Router } from 'express-ws';
 
 import {
   Get,

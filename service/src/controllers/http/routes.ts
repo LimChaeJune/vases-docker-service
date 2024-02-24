@@ -36,9 +36,9 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"metadata":{"dataType":"nestedObjectLiteral","nestedProperties":{"total":{"dataType":"double","required":true}}},"message":{"dataType":"string"},"result":{"dataType":"array","array":{"dataType":"refAlias","ref":"UserSchema"},"required":true},"code":{"ref":"PrefixCode_ObjectDotNotation_BaseCode__","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "BaseResponse__deleteCnt-number_.undefined_": {
+    "BaseResponse__deletedCnt-number_.undefined_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"metadata":{"dataType":"undefined"},"message":{"dataType":"string"},"result":{"dataType":"nestedObjectLiteral","nestedProperties":{"deleteCnt":{"dataType":"double","required":true}},"required":true},"code":{"ref":"PrefixCode_ObjectDotNotation_BaseCode__","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"metadata":{"dataType":"undefined"},"message":{"dataType":"string"},"result":{"dataType":"nestedObjectLiteral","nestedProperties":{"deletedCnt":{"dataType":"double","required":true}},"required":true},"code":{"ref":"PrefixCode_ObjectDotNotation_BaseCode__","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Express.User": {
@@ -121,8 +121,12 @@ export function RegisterRoutes(app: Router) {
 
             function UserController_getUsers(request: any, response: any, next: any) {
             const args = {
-                    offset: {"in":"query","name":"offset","required":true,"dataType":"double"},
-                    limit: {"in":"query","name":"limit","required":true,"dataType":"double"},
+                    page: {"in":"query","name":"page","dataType":"double"},
+                    pageSize: {"in":"query","name":"pageSize","dataType":"double"},
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    searchField: {"in":"query","name":"searchField","dataType":"string"},
+                    sort: {"in":"query","name":"sort","dataType":"string"},
+                    order: {"in":"query","name":"order","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

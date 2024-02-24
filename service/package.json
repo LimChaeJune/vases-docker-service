@@ -10,7 +10,7 @@
     "build": "tsc",
     "swagger": "tsoa spec",
     "routes": "tsoa routes",
-    "start": "npm install && npm run routes && npm run swagger &&  npm run build && node ./src/index"
+    "start": "npm install && npm rebuild && npm run routes && npm run swagger &&  npm run build && node ./src/index"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "@types/passport": "^1.0.16",
     "@types/passport-local": "^1.0.38",
     "@types/swagger-ui-express": "^4.1.6",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
@@ -51,7 +52,9 @@
     "redoc-express": "^2.1.0",
     "swagger-ui-express": "^5.0.0",
     "tsoa": "^6.0.1",
+    "url": "^0.11.3",
     "winston": "^3.11.0",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston-daily-rotate-file": "^4.7.1",
+    "ws": "^8.16.0"
   }
 }

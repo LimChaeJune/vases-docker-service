@@ -1,6 +1,6 @@
 import 'module-alias/register';
 import path from 'path';
-import express, { NextFunction } from 'express';
+import express, { NextFunction, Request } from 'express';
 import session from 'express-session';
 import connectSession from 'connect-session-knex';
 import passport from 'passport';
@@ -12,6 +12,13 @@ import modules from '@app/modules';
 import { BaseEntity } from '@app/modules/datasource/BaseEntity';
 import { ValidateError } from 'tsoa';
 import { CustomValidationError } from '@app/types/response';
+import WebSocket from 'ws';
+import http from 'http';
+import url from 'url';
+import expressWs from 'express-ws';
+import { AuthController } from '@app/controllers/AuthController';
+import { UserController } from '@app/controllers/UserController';
+import _ from 'lodash';
 
 const KnexSessionStore = connectSession(session);
 
@@ -22,6 +29,19 @@ console.log(config);
 
 modules.initialize().then(() => {
   const app = express();
+  const wsInstance = expressWs(app);
+
+  const send = (msg: string, targets?: number[]) => {
+    wsInstance.getWss().clients.forEach((client: ExtendedWebSocket) => {
+      if (targets && targets.length > 0) {
+        if (client.user && targets.includes(client.user.idx)) {
+          client.send(msg);
+        }
+      } else {
+        client.send(msg);
+      }
+    });
+  };
   const session_store = new KnexSessionStore({
     knex: BaseEntity.database,
     createtable: false,
@@ -135,6 +155,22 @@ modules.initialize().then(() => {
   //     message: 'Not Found',
   //   });
   // });
+
+  router.ws('*', (ws: ExtendedWebSocket, req) => {
+    if (!req.user) {
+      ws.close();
+      return;
+    }
+    ws.user = req.user;
+
+    ws.on('message', (msg) => {
+      console.log(msg);
+    });
+
+    ws.on('close', () => {
+      console.log('WebSocket was closed');
+    });
+  });
 
   app.use('/service/v1', router);
 

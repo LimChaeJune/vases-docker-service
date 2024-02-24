@@ -24,6 +24,11 @@
             "date": 1706738825790,
             "name": "C:\\workspace\\company\\saige-docker-service\\service\\src\\modules\\logger\\logs\\logfile.log.2024-02-01",
             "hash": "8f005d6a81172bba18d7786976fd937fbe58f1c224fe31bb3931e994b1f887e7"
+        },
+        {
+            "date": 1708295521250,
+            "name": "C:\\workspace\\company\\saige-docker-service\\service\\src\\modules\\logger\\logs\\logfile.log.2024-02-19",
+            "hash": "be932e9d4a76caa8f38599842a7855eb6dfd9602cc7e408ecc2c42b430de2d83"
         }
     ],
     "hashType": "sha256"

@@ -35,10 +35,10 @@ let UserController = class UserController extends tsoa_1.Controller {
             };
         });
     }
-    getUsers(offset, limit) {
+    getUsers(page, pageSize, search, searchField, sort, order) {
         return __awaiter(this, void 0, void 0, function* () {
             const service = new UserService_1.UserService();
-            const result = yield service.getUsers(offset, limit);
+            const result = yield service.getUsers(page, pageSize, search, searchField, sort, order);
             return {
                 code: 'server:success',
                 result: result.users,
@@ -55,10 +55,13 @@ let UserController = class UserController extends tsoa_1.Controller {
             return {
                 code: 'server:success',
                 result: {
-                    deleteCnt: result,
+                    deletedCnt: result,
                 },
             };
         });
+    }
+    deleteUsers() {
+        return __awaiter(this, void 0, void 0, function* () { });
     }
 };
 exports.UserController = UserController;
@@ -74,8 +77,12 @@ __decorate([
     (0, tsoa_1.Get)('/list'),
     __param(0, (0, tsoa_1.Query)()),
     __param(1, (0, tsoa_1.Query)()),
+    __param(2, (0, tsoa_1.Query)()),
+    __param(3, (0, tsoa_1.Query)()),
+    __param(4, (0, tsoa_1.Query)()),
+    __param(5, (0, tsoa_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUsers", null);
 __decorate([

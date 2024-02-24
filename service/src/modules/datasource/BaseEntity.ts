@@ -81,6 +81,13 @@ export class BaseEntity<T> {
     return BaseEntity.database<T>(this.tableName);
   }
 
+  async execute(q: Knex.QueryBuilder<T>) {
+    // before executing;
+    const result = await q;
+    // after executing;
+    return result;
+  }
+
   // table() {
   //   return
   // }

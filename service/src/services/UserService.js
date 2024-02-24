@@ -69,7 +69,7 @@ class UserService {
     deleteUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const userEntity = new Entities_1.UserEntity();
-            const aa = userEntity.query.delete().where('email', email);
+            yield userEntity.query.delete().where('email', email);
             return true;
         });
     }
@@ -81,18 +81,23 @@ class UserService {
             return result;
         });
     }
-    getUsers(offset, limit, name, email) {
+    getUsers(page, pageSize, search, searchField, sort, order) {
         return __awaiter(this, void 0, void 0, function* () {
             const userEntity = new Entities_1.UserEntity();
             let query = userEntity.query.select();
-            if (name)
-                query = query.where('name', name);
-            if (email)
-                query = query.andWhere('email', email);
+            if (search && searchField) {
+                const fields = searchField.split(',');
+                fields.forEach((field) => {
+                    query = query.where(field, 'like', `%${search}%`);
+                });
+            }
+            if (sort) {
+                query = query.orderBy(sort, order || 'asc');
+            }
             const total = (yield query.clone().count('idx as cnt').first());
-            console.log(total);
-            query = query.offset(offset);
-            query = query.limit(limit);
+            query = query
+                .limit(pageSize || 10)
+                .offset(((page || 1) - 1) * (pageSize || 10));
             const result = yield query;
             return { users: result, total: total.cnt };
         });

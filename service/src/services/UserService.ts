@@ -64,7 +64,7 @@ export class UserService {
   // 회원 탈퇴용
   async deleteUserByEmail(email: string): Promise<boolean> {
     const userEntity = new UserEntity();
-    const aa = userEntity.query.delete().where('email', email);
+    await userEntity.query.delete().where('email', email);
     return true;
   }
 
@@ -76,24 +76,34 @@ export class UserService {
   }
 
   async getUsers(
-    offset: number,
-    limit: number,
-    name?: string,
-    email?: string
+    page: number,
+    pageSize: number,
+    search: string,
+    searchField: string,
+    sort: string,
+    order: string
   ): Promise<{ users: UserSchema[]; total: number }> {
     const userEntity = new UserEntity();
 
     let query = userEntity.query.select();
 
-    if (name) query = query.where('name', name);
-    if (email) query = query.andWhere('email', email);
+    if (search && searchField) {
+      const fields = searchField.split(',');
+      fields.forEach((field) => {
+        query = query.where(field, 'like', `%${search}%`);
+      });
+    }
+
+    if (sort) {
+      query = query.orderBy(sort, order || 'asc');
+    }
 
     const total = (await query.clone().count('idx as cnt').first()) as any;
 
-    console.log(total);
+    query = query
+      .limit(pageSize || 10)
+      .offset(((page || 1) - 1) * (pageSize || 10));
 
-    query = query.offset(offset);
-    query = query.limit(limit);
     const result = await query;
     return { users: result, total: total.cnt };
   }
