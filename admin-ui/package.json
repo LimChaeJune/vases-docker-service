@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "vite:dev": "vite",
-    "vite:build": "vite build",
-    "webpack:dev": "webpack serve --mode development --config ./webpack.config.js",
-    "webpack:build": "webpack --mode production --config ./webpack.config.js"
+    "dev": "vite",
+    "build": "vite build"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +13,7 @@
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^17.0.75",
     "@types/react-dom": "^18.2.18",
+    "@types/react-router": "^5.1.20",
     "@vitejs/plugin-react": "^4.2.1",
     "compression-webpack-plugin": "^11.0.0",
     "copy-webpack-plugin": "^12.0.2",
@@ -38,8 +37,15 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "@blueprintjs/core": "^5.9.1",
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
+    "axios": "^1.6.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-router": "^6.22.1",
+    "react-router-dom": "^6.22.1",
+    "x-view-model": "^2.0.2"
   }
 }

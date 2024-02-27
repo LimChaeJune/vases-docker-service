@@ -59,7 +59,7 @@ export class DataConnector {
 
     await user.query.truncate();
     await user.query.insert({
-      email: 'admin@saige.ai',
+      email: 'admin@vases.ai',
       pwd: 'admin8282',
       type: 'admin',
       name: '관리자',

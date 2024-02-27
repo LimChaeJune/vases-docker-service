@@ -30,7 +30,7 @@ import {
 
 export class LoginDTO {
   /**
-   * @default "admin@saige.ai"
+   * @default "admin@vases.ai"
    * @format email
    */
   email: string;
@@ -100,7 +100,7 @@ export class AuthController extends Controller {
 
   @Example(
     {
-      email: 'admin@saige.ai',
+      email: 'admin@vases.ai',
       pwd: 'admin8282',
     },
     'admin login sample'

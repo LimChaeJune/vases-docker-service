@@ -45,7 +45,7 @@ modules.initialize().then(() => {
   const session_store = new KnexSessionStore({
     knex: BaseEntity.database,
     createtable: false,
-    tablename: 'saige_session',
+    tablename: 'vases_session',
   });
   const router = express.Router();
 
@@ -56,7 +56,7 @@ modules.initialize().then(() => {
 
   router.use(
     session({
-      secret: 'saige',
+      secret: 'vases',
       cookie: {
         maxAge: 1000 * 60 * config.session_time,
       },

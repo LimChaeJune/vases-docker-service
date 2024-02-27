@@ -16,7 +16,7 @@ export type UserSchema = {
 };
 
 export class UserEntity extends BaseEntity<UserSchema> {
-  constructor(tableName: string = 'saige_user') {
+  constructor(tableName: string = 'vases_user') {
     super(tableName, {
       idx: {
         type: 'increments',

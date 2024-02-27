@@ -12,9 +12,7 @@ const { ProvidePlugin, DefinePlugin } = require('webpack');
 const PORT = process.env.PORT || 8080;
 
 module.exports = (env, argv) => {
-  if (argv.env.DEPLOY_TYPE) {
-    dotenv.config({ path: `./.env.${argv.env.DEPLOY_TYPE}` });
-  }
+  dotenv.config();
   const { mode } = argv;
   return {
     devtool: undefined,
@@ -95,7 +93,7 @@ module.exports = (env, argv) => {
         },
       },
       static: {
-        directory: path.join(__dirname, 'dist'),
+        directory: path.join(__dirname, './dist'),
       },
       proxy: {
         '/service/v1': {

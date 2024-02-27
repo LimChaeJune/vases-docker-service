@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import pkg from './package.json';
+import dotenv from 'dotenv';
 
 const noAttr = () => {
   return {
@@ -15,6 +16,7 @@ const noAttr = () => {
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
+  dotenv.config();
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
   return defineConfig({
@@ -43,7 +45,7 @@ export default ({ mode }) => {
       SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
     },
     server: {
-      port: 8090,
+      port: 8080,
       host: '0.0.0.0',
       proxy: {
         '/service/v1': {

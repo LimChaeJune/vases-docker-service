@@ -8,7 +8,7 @@ export type SessionSchema = {
 };
 
 export class SessionEntity extends BaseEntity<SessionSchema> {
-  constructor(tableName: string = 'saige_session') {
+  constructor(tableName: string = 'vases_session') {
     super(tableName, {
       idx: {
         type: 'increments',
