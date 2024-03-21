@@ -1,0 +1,17 @@
+{
+  "name": "vases",
+  "version": "1.0.0",
+  "description": "도커 기반으로 서비스 작성",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build -workspaces --if-present",
+    "start": "npm run start -workspaces --if-present"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "packages/datasource",
+    "packages/logger",
+    "packages/service"
+  ]
+}

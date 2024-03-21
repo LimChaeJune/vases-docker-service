@@ -1,0 +1,988 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"PrefixCode_ObjectDotNotation_BaseCode__": {
+				"type": "string",
+				"enum": [
+					"server:success",
+					"server:error",
+					"server:auth.invalid_password",
+					"server:auth.no_users",
+					"server:auth.exists_email",
+					"server:database.undefined",
+					"server:database.duplicated",
+					"server:database.disconnected"
+				]
+			},
+			"BaseResponse_boolean.undefined_": {
+				"properties": {
+					"metadata": {},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"type": "boolean"
+					},
+					"code": {
+						"$ref": "#/components/schemas/PrefixCode_ObjectDotNotation_BaseCode__"
+					}
+				},
+				"required": [
+					"result",
+					"code"
+				],
+				"type": "object"
+			},
+			"UserMetaJson": {
+				"properties": {
+					"test": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"test"
+				],
+				"type": "object"
+			},
+			"UserSchema": {
+				"properties": {
+					"created_time": {
+						"type": "number",
+						"format": "double"
+					},
+					"updated_time": {
+						"type": "number",
+						"format": "double"
+					},
+					"meta_json": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/components/schemas/UserMetaJson"
+							}
+						]
+					},
+					"name": {
+						"type": "string"
+					},
+					"pwd": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"idx": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"created_time",
+					"updated_time",
+					"meta_json",
+					"name",
+					"pwd",
+					"email",
+					"type",
+					"idx"
+				],
+				"type": "object"
+			},
+			"BaseResponse_UserSchema-Array._total-number__": {
+				"properties": {
+					"metadata": {
+						"properties": {
+							"total": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"total"
+						],
+						"type": "object"
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"items": {
+							"$ref": "#/components/schemas/UserSchema"
+						},
+						"type": "array"
+					},
+					"code": {
+						"$ref": "#/components/schemas/PrefixCode_ObjectDotNotation_BaseCode__"
+					}
+				},
+				"required": [
+					"result",
+					"code"
+				],
+				"type": "object"
+			},
+			"BaseResponse__deletedCnt-number_.undefined_": {
+				"properties": {
+					"metadata": {},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"properties": {
+							"deletedCnt": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"deletedCnt"
+						],
+						"type": "object"
+					},
+					"code": {
+						"$ref": "#/components/schemas/PrefixCode_ObjectDotNotation_BaseCode__"
+					}
+				},
+				"required": [
+					"result",
+					"code"
+				],
+				"type": "object"
+			},
+			"Express.User": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BaseResponse_boolean.Express.User_": {
+				"properties": {
+					"metadata": {
+						"$ref": "#/components/schemas/Express.User"
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"type": "boolean"
+					},
+					"code": {
+						"$ref": "#/components/schemas/PrefixCode_ObjectDotNotation_BaseCode__"
+					}
+				},
+				"required": [
+					"result",
+					"code"
+				],
+				"type": "object"
+			},
+			"LoginDTO": {
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email",
+						"default": "admin@vases.ai"
+					},
+					"pwd": {
+						"type": "string",
+						"default": "admin8282",
+						"minLength": 8,
+						"maxLength": 50
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BaseResponse_boolean.number-Array_": {
+				"properties": {
+					"metadata": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"type": "boolean"
+					},
+					"code": {
+						"$ref": "#/components/schemas/PrefixCode_ObjectDotNotation_BaseCode__"
+					}
+				},
+				"required": [
+					"result",
+					"code"
+				],
+				"type": "object"
+			},
+			"SignupDTO": {
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email"
+					},
+					"name": {
+						"type": "string",
+						"description": "풀네임 2자이상 써야데",
+						"minLength": 2,
+						"maxLength": 50
+					},
+					"pwd": {
+						"type": "string",
+						"minLength": 8,
+						"maxLength": 50
+					},
+					"meta_json": {
+						"type": "string"
+					},
+					"auto_login": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"email",
+					"name",
+					"pwd"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "@vases/service",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/user/profile": {
+			"put": {
+				"operationId": "UpdateProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse_boolean.undefined_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"name": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"name"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/list": {
+			"get": {
+				"operationId": "GetUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse_UserSchema-Array._total-number__"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "searchField",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "order",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/user/{idx}": {
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse__deletedCnt-number_.undefined_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idx",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/auth/check": {
+			"get": {
+				"operationId": "Check",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse_boolean.Express.User_"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/logout": {
+			"get": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse_boolean.undefined_"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse_boolean.undefined_"
+								},
+								"examples": {
+									"admin login sample": {
+										"value": {
+											"email": "admin@vases.ai",
+											"pwd": "admin8282"
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/signup": {
+			"post": {
+				"operationId": "Signup",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse_boolean.number-Array_"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"details": {
+											"properties": {},
+											"additionalProperties": {
+												"properties": {
+													"message": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"message",
+													"value"
+												],
+												"type": "object"
+											},
+											"type": "object"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"details",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unhandled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SignupDTO"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/service/v1"
+		}
+	]
+}
