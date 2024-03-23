@@ -12,6 +12,7 @@
   "workspaces": [
     "packages/datasource",
     "packages/logger",
+    "packages/engine",
     "packages/service"
   ]
 }
