@@ -1,11 +1,17 @@
 import path from "path";
 import knex, { Knex } from "knex";
 import { BaseEntity } from "./BaseEntity";
-import { SessionEntity, UserEntity } from "./Entities";
+import { FinanceEntity, SessionEntity, StockEntity, TradeEntity, UserEntity } from "./Entities";
 export { BaseEntity } from "./BaseEntity";
 export {
   UserEntity,
   SessionEntity,
+  PriceEntity,
+  FinanceEntity,
+  StockEntity,
+  FinanceSchema,
+  StockSchema,
+  PriceSchema,
   UserSchema,
   SessionSchema,
 } from "./Entities";
@@ -57,6 +63,9 @@ export class DataConnector {
     BaseEntity.database = this.database;
     const user = new UserEntity();
     const session = new SessionEntity();
+    const stock = new StockEntity();
+    const trade = new TradeEntity();
+    const finance = new FinanceEntity();
 
     await user.drop();
     await session.drop();
